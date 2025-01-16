@@ -26,14 +26,14 @@ export function Navbar() {
             <Mail className="h-5 w-5" />
             <span className="hidden sm:inline">Contact</span>
           </Link>
-          {/* <Link
+          <Link
             to="/settings"
             className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent/10"
             aria-label="Settings"
           >
             <Settings className="h-5 w-5" />
             <span className="hidden sm:inline">Settings</span>
-          </Link> */}
+          </Link>
         </div>
       </div>
     </nav>
