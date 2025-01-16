@@ -34,6 +34,7 @@ export function Navbar() {
             <Settings className="h-5 w-5" />
             <span className="hidden sm:inline">Settings</span>
           </Link>
+          <ThemeToggle />
         </div>
       </div>
     </nav>
