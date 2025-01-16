@@ -4,35 +4,48 @@
 
 @layer base {
   :root {
-    --background: 280 50% 98%;
-    --foreground: 280 10% 10%;
-
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 280 10% 10%;
-
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 280 10% 10%;
-
-    --primary: 280 60% 50%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 280 20% 92%;
-    --secondary-foreground: 280 10% 10%;
-
-    --muted: 280 20% 92%;
-    --muted-foreground: 280 5% 40%;
-
-    --accent: 280 20% 92%;
-    --accent-foreground: 280 10% 10%;
-
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 248 90% 59%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 100% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 171 58% 40%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 280 20% 88%;
-    --input: 280 20% 88%;
-    --ring: 280 60% 50%;
-
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 248 90% 59%;
     --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 248 90% 59%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 171 58% 40%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 248 90% 59%;
   }
 }
 
@@ -41,6 +54,23 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen transition-colors duration-300;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+  body::before {
+    content: "";
+    @apply fixed inset-0 bg-background/80 backdrop-blur-sm -z-10;
+  }
+}
+
+.mood-emoji {
+  @apply text-4xl cursor-pointer transition-transform hover:scale-110 focus:scale-110 focus:outline-none;
+}
+
+.calendar-day {
+  @apply p-1 rounded-lg transition-colors hover:bg-accent/10 focus:bg-accent/10 focus:outline-none;
+}
+
+.calendar-day[aria-selected="true"] {
+  @apply bg-primary text-primary-foreground;
 }
