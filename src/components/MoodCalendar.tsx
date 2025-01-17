@@ -68,6 +68,10 @@ export function MoodCalendar({
           head_row: "flex",
           row: "flex w-full mt-2",
         }}
+
+        // TODO - FIX the issue below with Day component that's causing issues with selecting dates
+        // ALSO - need to make it so that the emoji that was selected shows up on the calendar
+
         // components={{
         //   Day: ({ date, className, ...props }: DayProps) => {
         //     const mood = getMoodForDate(date);
