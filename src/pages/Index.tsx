@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { MoodCalendar } from "@/components/MoodCalendar";
+import { format } from "date-fns";
 
 const MOODS = [
   { emoji: "😊", label: "Happy" },
@@ -23,6 +24,7 @@ export interface DayMood {
 }
 
 const Index = () => {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedMood, setSelectedMood] = useState("");
   const [note, setNote] = useState("");
   const [moodData, setMoodData] = useState<DayMood[]>([]);
@@ -38,28 +40,30 @@ const Index = () => {
     }
 
     const newMood: DayMood = {
-      date: new Date(),
+      date: selectedDate,
       mood: selectedMood,
       note: note || undefined,
     };
 
     setMoodData((prev) => {
-      // Remove any existing mood for today
+      // Remove any existing mood for the selected date
       const filtered = prev.filter(
         (mood) =>
-          new Date(mood.date).toDateString() !== new Date().toDateString()
+          new Date(mood.date).toDateString() !== selectedDate.toDateString()
       );
       return [...filtered, newMood];
     });
 
+    // TODO - implement persistence when saving mood
+
     toast({
       title: "Mood saved!",
-      description: "Your mood has been recorded for today.",
+      description: "Your mood has been recorded",
     });
 
     // Reset form
-    setSelectedMood("");
-    setNote("");
+    // setSelectedMood("");
+    // setNote("");
   };
 
   return (
@@ -73,6 +77,9 @@ const Index = () => {
         </Card>
 
         <Card className="p-6 order-1 md:order-2">
+          <h3 className="text-lg font-medium mb-4">
+            Record mood for {format(selectedDate, "MMMM d, yyyy")}
+          </h3>
           <div className="grid grid-cols-4 gap-4 mb-6">
             {MOODS.map((mood) => (
               <button
