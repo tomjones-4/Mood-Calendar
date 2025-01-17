@@ -62,9 +62,14 @@ const Index = () => {
     });
 
     // Reset form
-    // setSelectedMood("");
-    // setNote("");
+    setSelectedMood("");
+    setNote("");
   };
+
+  console.log("State for Index component:\n");
+  console.log("selectedDate = " + selectedDate + "\n");
+  console.log("selectedMood = " + selectedMood + "\n");
+  console.log("moodData = " + moodData + "\n");
 
   return (
     <div className="container py-8 animate-fade-in">
@@ -73,7 +78,12 @@ const Index = () => {
       <div className="grid gap-8 md:grid-cols-[1fr,400px]">
         <Card className="p-6 order-2 md:order-1">
           <h2 className="text-2xl font-semibold mb-4">Your Mood Calendar</h2>
-          <MoodCalendar moodData={moodData} setMoodData={setMoodData} />
+          <MoodCalendar
+            moodData={moodData}
+            setMoodData={setMoodData}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
         </Card>
 
         <Card className="p-6 order-1 md:order-2">
