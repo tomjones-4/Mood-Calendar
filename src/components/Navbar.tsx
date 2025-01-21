@@ -19,6 +19,14 @@ export function Navbar() {
             <span className="hidden sm:inline">Calendar</span>
           </Link>
           <Link
+            to="/statistics"
+            className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent/10"
+            aria-label="Stats"
+          >
+            <Calendar className="h-5 w-5" />
+            <span className="hidden sm:inline">Stats</span>
+          </Link>
+          <Link
             to="/contact"
             className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent/10"
             aria-label="Contact"

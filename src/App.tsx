@@ -8,6 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
+import Statistics from "./pages/Statistics";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/statistics" element={<Statistics />} />
               </Routes>
             </main>
           </div>
