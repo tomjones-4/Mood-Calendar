@@ -66,10 +66,10 @@ const Index = () => {
     setNote("");
   };
 
-  console.log("State for Index component:\n");
-  console.log("selectedDate = " + selectedDate + "\n");
-  console.log("selectedMood = " + selectedMood + "\n");
-  console.log("moodData = " + moodData + "\n");
+  // console.log("State for Index component:\n");
+  // console.log("selectedDate = " + selectedDate + "\n");
+  // console.log("selectedMood = " + selectedMood + "\n");
+  // console.log("moodData = " + moodData + "\n");
 
   return (
     <div className="container py-8 animate-fade-in">
@@ -82,7 +82,7 @@ const Index = () => {
             moodData={moodData}
             setMoodData={setMoodData}
             selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
+            onSelectDate={setSelectedDate}
           />
         </Card>
 

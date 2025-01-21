@@ -6,21 +6,20 @@ import { DayMood } from "../pages/Index";
 interface DayProps {
   date: Date;
   displayMonth: Date;
-  className?: string;
 }
 
 interface MoodCalendarProps {
   moodData: DayMood[];
   setMoodData: (data: DayMood[]) => void;
   selectedDate: Date;
-  setSelectedDate: (date: Date) => void;
+  onSelectDate: (date: Date) => void;
 }
 
 export function MoodCalendar({
   moodData,
   setMoodData,
   selectedDate,
-  setSelectedDate,
+  onSelectDate,
 }: MoodCalendarProps) {
   const getMoodForDate = (date: Date) => {
     return moodData.find(
@@ -29,7 +28,7 @@ export function MoodCalendar({
   };
 
   const modifiers = {
-    mood: (date: Date) => getMoodForDate(date) !== undefined,
+    hasMood: (date: Date) => getMoodForDate(date) !== undefined,
   };
 
   const modifiersStyles = {
@@ -40,10 +39,10 @@ export function MoodCalendar({
   };
 
   // Function to handle day click
-  const handleDayClick = (day: Date | undefined) => {
-    console.log("Date clicked!");
-    setSelectedDate(day ? new Date(day) : new Date()); // Update the selected date in state
-  };
+  // const handleDayClick = (day: Date | undefined) => {
+  //   console.log("Date clicked!");
+  //   setSelectedDate(day ? new Date(day) : new Date()); // Update the selected date in state
+  // };
 
   return (
     <div className="p-4">
@@ -52,8 +51,9 @@ export function MoodCalendar({
         selected={selectedDate}
         //onSelect={setSelectedDate}
         //onSelect={handleDayClick}
-        onDayClick={handleDayClick}
+        // onDayClick={handleDayClick}
         //onDayClick={setSelectedDate}
+        onSelect={(date) => date && onSelectDate(date)}
         modifiers={modifiers}
         modifiersStyles={modifiersStyles}
         className="rounded-md border shadow-sm w-full max-w-[600px] mx-auto"
@@ -68,37 +68,38 @@ export function MoodCalendar({
           head_row: "flex",
           row: "flex w-full mt-2",
         }}
+        components={{
+          Day: ({ date, ...props }) => {
+            const mood = getMoodForDate(date);
+            const isSelected =
+              format(selectedDate, "yyyy-MM-dd") === format(date, "yyyy-MM-dd");
 
-        // TODO - FIX the issue below with Day component that's causing issues with selecting dates
-        // ALSO - need to make it so that the emoji that was selected shows up on the calendar
-
-        // components={{
-        //   Day: ({ date, className, ...props }: DayProps) => {
-        //     const mood = getMoodForDate(date);
-        //     return (
-        //       <button
-        //         {...props}
-        //         className={cn(
-        //           "calendar-day h-14 w-14",
-        //           mood && "hover:bg-primary/20",
-        //           className
-        //         )}
-        //       >
-        //         <div className="relative flex flex-col items-center justify-center h-full">
-        //           <span className="text-sm mb-1">{format(date, "d")}</span>
-        //           {mood && (
-        //             <span
-        //               className="text-lg transform scale-110 transition-transform hover:scale-125"
-        //               style={{ lineHeight: 1 }}
-        //             >
-        //               {mood.mood}
-        //             </span>
-        //           )}
-        //         </div>
-        //       </button>
-        //     );
-        //   },
-        // }}
+            return (
+              <button
+                {...props}
+                className={cn(
+                  "h-14 w-14 p-0 font-normal relative hover:bg-accent",
+                  isSelected &&
+                    "bg-primary text-primary-foreground hover:bg-primary/90",
+                  mood && "hover:bg-primary/20"
+                )}
+                onClick={() => onSelectDate(date)}
+              >
+                <div className="relative flex flex-col items-center justify-center h-full">
+                  <span className="text-sm mb-1">{format(date, "d")}</span>
+                  {mood && (
+                    <span
+                      className="text-lg transform scale-110 transition-transform hover:scale-125"
+                      style={{ lineHeight: 1 }}
+                    >
+                      {mood.mood}
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          },
+        }}
       />
       {selectedDate && <p>You selected: {selectedDate.toDateString()}</p>}
     </div>
