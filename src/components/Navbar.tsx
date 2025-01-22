@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Calendar, Settings, Mail } from "lucide-react";
+import { Calendar, Settings, Mail, BarChart } from "lucide-react";
 
 export function Navbar() {
   return (
@@ -23,7 +23,7 @@ export function Navbar() {
             className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent/10"
             aria-label="Stats"
           >
-            <Calendar className="h-5 w-5" />
+            <BarChart className="h-5 w-5" />
             <span className="hidden sm:inline">Stats</span>
           </Link>
           <Link
