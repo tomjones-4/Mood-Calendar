@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { MoodCalendar } from "@/components/MoodCalendar";
+import { MoodSearch } from "@/components/MoodSearch";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Plus, Award } from "lucide-react";
@@ -167,15 +168,18 @@ const Index = () => {
       </div>
 
       <div className="grid gap-8 md:grid-cols-[1fr,400px]">
-        <Card className="p-6 order-2 md:order-1">
-          <h2 className="text-2xl font-semibold mb-4">Your Mood Calendar</h2>
-          <MoodCalendar
-            moodData={moodData}
-            setMoodData={setMoodData}
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
-          />
-        </Card>
+        <div className="space-y-8 order-2 md:order-1">
+          <Card className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">Your Mood Calendar</h2>
+            <MoodCalendar
+              moodData={moodData}
+              setMoodData={setMoodData}
+              selectedDate={selectedDate}
+              onSelectDate={setSelectedDate}
+            />
+          </Card>
+          <MoodSearch moodData={moodData} />
+        </div>
 
         <Card className="p-6 order-1 md:order-2">
           <h3 className="text-lg font-medium mb-4">
