@@ -7,7 +7,7 @@ import { MoodCalendar } from "@/components/MoodCalendar";
 import { MoodSearch } from "@/components/MoodSearch";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Plus, Award } from "lucide-react";
+import { Plus, Award, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +26,19 @@ const DEFAULT_MOODS = [
   { emoji: "😴", label: "Tired" },
   { emoji: "😰", label: "Anxious" },
   { emoji: "🥰", label: "Loved" },
+];
+
+const JOURNALING_PROMPTS = [
+  "How are you feeling today?",
+  "What is one thing you're grateful for?",
+  "How have you taken a break for yourself today?",
+  "What was the highlight of your day?",
+  "What's something that challenged you today?",
+  "What's something you're looking forward to?",
+  "How did you practice self-care today?",
+  "What made you smile today?",
+  "What's something you learned today?",
+  "How did you show kindness to yourself or others today?",
 ];
 
 export interface CustomMood {
@@ -140,6 +153,18 @@ const Index = () => {
     setNote("");
   };
 
+  const generatePrompt = () => {
+    const randomIndex = Math.floor(Math.random() * JOURNALING_PROMPTS.length);
+    const prompt = JOURNALING_PROMPTS[randomIndex];
+    setNote((prevNote) => {
+      return prevNote ? `${prevNote}\n${prompt}\n` : `${prompt}\n`;
+    });
+    toast({
+      title: "New prompt generated!",
+      description: "Hope this helps inspire your journaling.",
+    });
+  };
+
   const allMoods = [...DEFAULT_MOODS, ...customMoods];
 
   // console.log("State for Index component:\n");
@@ -247,12 +272,29 @@ const Index = () => {
             ))}
           </div>
 
-          <Textarea
-            placeholder="Add a note about your day... (optional)"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="mb-4"
-          />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label htmlFor="note" className="text-sm text-muted-foreground">
+                Add a note about your day (optional)
+              </label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={generatePrompt}
+                className="flex items-center gap-1"
+              >
+                <Sparkles className="w-4 h-4" />
+                Need inspiration?
+              </Button>
+            </div>
+            <Textarea
+              id="note"
+              placeholder="Add a note about your day... (optional)"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="mb-4"
+            />
+          </div>
 
           <Button onClick={handleSave} className="w-full">
             Save Today's Mood
