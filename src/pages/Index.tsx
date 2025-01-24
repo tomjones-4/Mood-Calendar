@@ -7,7 +7,7 @@ import { MoodCalendar } from "@/components/MoodCalendar";
 import { MoodSearch } from "@/components/MoodSearch";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Plus, Award, Sparkles } from "lucide-react";
+import { Plus, Award, Sparkles, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -50,6 +50,7 @@ export interface DayMood {
   date: Date;
   mood: string;
   note?: string;
+  favorite?: boolean;
 }
 
 const Index = () => {
@@ -167,6 +168,34 @@ const Index = () => {
 
   const allMoods = [...DEFAULT_MOODS, ...customMoods];
 
+  const toggleFavorite = () => {
+    setMoodData((prev) => {
+      const existingEntry = prev.find(
+        (mood) =>
+          format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+      );
+
+      if (existingEntry) {
+        return prev.map((mood) =>
+          format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+            ? { ...mood, favorite: !mood.favorite }
+            : mood
+        );
+      }
+      return prev;
+    });
+
+    toast({
+      title: "Favorite updated",
+      description: "Your favorite days collection has been updated.",
+    });
+  };
+
+  const isFavorite = moodData.find(
+    (mood) =>
+      format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+  )?.favorite;
+
   // console.log("State for Index component:\n");
   // console.log("selectedDate = " + selectedDate + "\n");
   // console.log("selectedMood = " + selectedMood + "\n");
@@ -207,9 +236,28 @@ const Index = () => {
         </div>
 
         <Card className="p-6 order-1 md:order-2">
-          <h3 className="text-lg font-medium mb-4">
-            Record mood for {format(selectedDate, "MMMM d, yyyy")}
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">
+              Record mood for {format(selectedDate, "MMMM d, yyyy")}
+            </h3>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleFavorite}
+              className={`${
+                isFavorite ? "text-yellow-500" : "text-muted-foreground"
+              }`}
+              disabled={
+                !moodData.some(
+                  (mood) =>
+                    format(mood.date, "yyyy-MM-dd") ===
+                    format(selectedDate, "yyyy-MM-dd")
+                )
+              }
+            >
+              <Star className="h-5 w-5" />
+            </Button>
+          </div>
 
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-sm text-muted-foreground">Select Mood</h4>

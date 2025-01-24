@@ -1,40 +1,58 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MoodTrends } from "@/components/mood/MoodTrends";
 import { MoodAggregates } from "@/components/mood/MoodAggregates";
 import { DayMood } from "./Index";
+import { Star } from "lucide-react";
+import { format } from "date-fns";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
 const Statistics = () => {
-  const [moodData] = useState<DayMood[]>(() => {
-    const saved = localStorage.getItem("moodData");
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Get moodData from localStorage or another source
+  const moodData: DayMood[] = JSON.parse(
+    localStorage.getItem("moodData") || "[]"
+  );
+  const favoriteDays = moodData.filter((day) => day.favorite);
+
   return (
     <div className="container py-8 animate-fade-in">
       <h1 className="text-4xl font-bold mb-8">Mood Statistics</h1>
-
-      <Tabs defaultValue="trends" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-          <TabsTrigger value="aggregates">Aggregates</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="trends" className="space-y-4">
-          <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">
-              Mood Trends Over Time
-            </h2>
-            <MoodTrends moodData={moodData} />
+      <div className="grid gap-8">
+        <MoodTrends moodData={moodData} />
+        <MoodAggregates moodData={moodData} />
+        {favoriteDays.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Star className="h-5 w-5 text-yellow-500" />
+                Favorite Days
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {favoriteDays.map((day) => (
+                  <Card key={day.date.toString()} className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-medium">
+                          {format(new Date(day.date), "MMMM d, yyyy")}
+                        </p>
+                        <p className="text-2x1 mt-1">{day.mood}</p>
+                      </div>
+                      <Star className="h-4 w-4 text-yellow-500" />
+                    </div>
+                    {day.note && (
+                      <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                        {day.note}
+                      </p>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="aggregates" className="space-y-4">
-          <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Mood Insights</h2>
-            <MoodAggregates moodData={moodData} />
-          </Card>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 };
