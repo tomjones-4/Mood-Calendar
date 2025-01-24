@@ -68,8 +68,20 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    localStorage.setItem("customMoods", JSON.stringify(customMoods));
-  }, [customMoods]);
+    const savedMoodData = localStorage.getItem("moodData");
+    if (savedMoodData) {
+      setMoodData(
+        JSON.parse(savedMoodData).map((item: any) => ({
+          ...item,
+          date: new Date(item.date),
+        }))
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("moodData", JSON.stringify(moodData));
+  }, [moodData]);
 
   const checkAchievements = () => {
     const currentMonth = new Date().getMonth();
@@ -170,19 +182,12 @@ const Index = () => {
 
   const toggleFavorite = () => {
     setMoodData((prev) => {
-      const existingEntry = prev.find(
-        (mood) =>
-          format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+      const newMoodData = prev.map((mood) =>
+        format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
+          ? { ...mood, favorite: !mood.favorite }
+          : mood
       );
-
-      if (existingEntry) {
-        return prev.map((mood) =>
-          format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
-            ? { ...mood, favorite: !mood.favorite }
-            : mood
-        );
-      }
-      return prev;
+      return newMoodData;
     });
 
     toast({

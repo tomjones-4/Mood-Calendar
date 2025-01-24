@@ -11,7 +11,10 @@ const Statistics = () => {
   // Get moodData from localStorage or another source
   const moodData: DayMood[] = JSON.parse(
     localStorage.getItem("moodData") || "[]"
-  );
+  ).map((item: any) => ({
+    ...item,
+    date: new Date(item.date),
+  }));
   const favoriteDays = moodData.filter((day) => day.favorite);
 
   return (
