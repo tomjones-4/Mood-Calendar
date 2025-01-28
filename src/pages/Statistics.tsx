@@ -18,10 +18,17 @@ const Statistics = () => {
   const favoriteDays = moodData.filter((day) => day.favorite);
 
   return (
-    <div className="container py-8 animate-fade-in">
-      <h1 className="text-4xl font-bold mb-8">Mood Statistics</h1>
+    <div className="container py-8 space-y-8 animate-fade-in">
+      <h1 className="text-4xl font-bold">Mood Statistics</h1>
+      <Card className="w-full p-6">
+        <CardHeader className="px-0 pt-0">
+          <CardTitle>Mood Trends</CardTitle>
+        </CardHeader>
+        <CardContent className="px-0 pb-0">
+          <MoodTrends moodData={moodData} />
+        </CardContent>
+      </Card>
       <div className="grid gap-8">
-        <MoodTrends moodData={moodData} />
         <MoodAggregates moodData={moodData} />
         {favoriteDays.length > 0 && (
           <Card>
