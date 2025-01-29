@@ -1,50 +1,14 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { MoodCalendar } from "@/components/MoodCalendar";
-import { MoodSearch } from "@/components/MoodSearch";
 import { format } from "date-fns";
-import { Input } from "@/components/ui/input";
-import { Plus, Award, Sparkles, Star } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Star, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-const DEFAULT_MOODS = [
-  { emoji: "😊", label: "Happy" },
-  { emoji: "😢", label: "Sad" },
-  { emoji: "😐", label: "Neutral" },
-  { emoji: "😡", label: "Angry" },
-  { emoji: "🤩", label: "Excited" },
-  { emoji: "😴", label: "Tired" },
-  { emoji: "😰", label: "Anxious" },
-  { emoji: "🥰", label: "Loved" },
-];
-
-const JOURNALING_PROMPTS = [
-  "How are you feeling today?",
-  "What is one thing you're grateful for?",
-  "How have you taken a break for yourself today?",
-  "What was the highlight of your day?",
-  "What's something that challenged you today?",
-  "What's something you're looking forward to?",
-  "How did you practice self-care today?",
-  "What made you smile today?",
-  "What's something you learned today?",
-  "How did you show kindness to yourself or others today?",
-];
-
-export interface CustomMood {
-  emoji: string;
-  label: string;
-}
+import { MoodSearch } from "@/components/MoodSearch";
+import { MoodSelector, CustomMood } from "@/components/mood/MoodSelector";
+import { MoodNote } from "@/components/mood/MoodNote";
 
 export interface DayMood {
   date: Date;
@@ -62,8 +26,6 @@ const Index = () => {
     const saved = localStorage.getItem("customMoods");
     return saved ? JSON.parse(saved) : [];
   });
-  const [newMoodEmoji, setNewMoodEmoji] = useState("");
-  const [newMoodLabel, setNewMoodLabel] = useState("");
   const [achievements, setAchievements] = useState<string[]>([]);
   const { toast } = useToast();
 
@@ -83,6 +45,10 @@ const Index = () => {
     localStorage.setItem("moodData", JSON.stringify(moodData));
   }, [moodData]);
 
+  useEffect(() => {
+    checkAchievements();
+  }, [moodData]);
+
   const checkAchievements = () => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -94,6 +60,7 @@ const Index = () => {
         entryDate.getFullYear() === currentYear
       );
     });
+
     if (monthEntries.length >= 30 && !achievements.includes("Monthly Master")) {
       setAchievements((prev) => [...prev, "Monthly Master"]);
       toast({
@@ -101,6 +68,7 @@ const Index = () => {
         description: "Monthly Master: Logged moods for 30 days!",
       });
     }
+
     if (monthEntries.length >= 7 && !achievements.includes("Week Warrior")) {
       setAchievements((prev) => [...prev, "Week Warrior"]);
       toast({
@@ -108,26 +76,6 @@ const Index = () => {
         description: "Week Warrior: Logged moods for 7 consecutive days!",
       });
     }
-  };
-
-  const handleAddCustomMood = () => {
-    if (!newMoodEmoji || !newMoodLabel) {
-      toast({
-        title: "Please fill in both fields",
-        variant: "destructive",
-      });
-      return;
-    }
-    setCustomMoods((prev) => [
-      ...prev,
-      { emoji: newMoodEmoji, label: newMoodLabel },
-    ]);
-    setNewMoodEmoji("");
-    setNewMoodLabel("");
-    toast({
-      title: "Custom mood added!",
-      description: `Added ${newMoodEmoji} ${newMoodLabel} to your moods.`,
-    });
   };
 
   const handleSave = () => {
@@ -146,7 +94,6 @@ const Index = () => {
     };
 
     setMoodData((prev) => {
-      // Remove any existing mood for the selected date
       const filtered = prev.filter(
         (mood) =>
           new Date(mood.date).toDateString() !== selectedDate.toDateString()
@@ -154,31 +101,14 @@ const Index = () => {
       return [...filtered, newMood];
     });
 
-    // TODO - implement persistence when saving mood
-
     toast({
       title: "Mood saved!",
-      description: "Your mood has been recorded",
+      description: "Your mood has been recorded.",
     });
 
-    // Reset form
     setSelectedMood("");
     setNote("");
   };
-
-  const generatePrompt = () => {
-    const randomIndex = Math.floor(Math.random() * JOURNALING_PROMPTS.length);
-    const prompt = JOURNALING_PROMPTS[randomIndex];
-    setNote((prevNote) => {
-      return prevNote ? `${prevNote}\n${prompt}\n` : `${prompt}\n`;
-    });
-    toast({
-      title: "New prompt generated!",
-      description: "Hope this helps inspire your journaling.",
-    });
-  };
-
-  const allMoods = [...DEFAULT_MOODS, ...customMoods];
 
   const toggleFavorite = () => {
     setMoodData((prev) => {
@@ -200,11 +130,6 @@ const Index = () => {
     (mood) =>
       format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
   )?.favorite;
-
-  // console.log("State for Index component:\n");
-  // console.log("selectedDate = " + selectedDate + "\n");
-  // console.log("selectedMood = " + selectedMood + "\n");
-  // console.log("moodData = " + moodData + "\n");
 
   return (
     <div className="container py-8 animate-fade-in">
@@ -237,6 +162,7 @@ const Index = () => {
               onSelectDate={setSelectedDate}
             />
           </Card>
+
           <MoodSearch moodData={moodData} />
         </div>
 
@@ -264,93 +190,17 @@ const Index = () => {
             </Button>
           </div>
 
-          <div className="flex justify-between items-center mb-4">
-            <h4 className="text-sm text-muted-foreground">Select Mood</h4>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Custom
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add Custom Mood</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <label htmlFor="emoji">Emoji</label>
-                    <Input
-                      id="emoji"
-                      value={newMoodEmoji}
-                      onChange={(e) => setNewMoodEmoji(e.target.value)}
-                      placeholder="Enter an emoji (e.g., 🌟)"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="label">Label</label>
-                    <Input
-                      id="label"
-                      value={newMoodLabel}
-                      onChange={(e) => setNewMoodLabel(e.target.value)}
-                      placeholder="Enter a label"
-                    />
-                  </div>
-                  <Button onClick={handleAddCustomMood}>Add Mood</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <MoodSelector
+            selectedMood={selectedMood}
+            setSelectedMood={setSelectedMood}
+            customMoods={customMoods}
+            setCustomMoods={setCustomMoods}
+          />
 
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            {allMoods.map((mood) => (
-              <button
-                key={mood.label}
-                onClick={() => setSelectedMood(mood.emoji)}
-                className={`mood-emoji ${
-                  selectedMood === mood.emoji
-                    ? "scale-110 ring-2 ring-primary rounded-full"
-                    : ""
-                }`}
-                aria-label={mood.label}
-                aria-pressed={selectedMood === mood.emoji}
-              >
-                <span className="text-2xl">{mood.emoji}</span>
-                <span className="text-xs mt-1">{mood.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <label htmlFor="note" className="text-sm text-muted-foreground">
-                Add a note about your day (optional)
-              </label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={generatePrompt}
-                className="flex items-center gap-1"
-              >
-                <Sparkles className="w-4 h-4" />
-                Need inspiration?
-              </Button>
-            </div>
-            <Textarea
-              id="note"
-              placeholder="Add a note about your day... (optional)"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              className="mb-4"
-            />
-          </div>
+          <MoodNote note={note} setNote={setNote} />
 
           <Button onClick={handleSave} className="w-full">
-            Save Today's Mood
+            Save Mood
           </Button>
         </Card>
       </div>
