@@ -1,7 +1,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { DayMood } from "../pages/Index";
+import { DayMood } from "../../pages/Index";
 
 interface DayProps {
   date: Date;

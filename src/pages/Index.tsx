@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { MoodCalendar } from "@/components/MoodCalendar";
+import { MoodCalendar } from "@/components/mood/MoodCalendar";
 import { format } from "date-fns";
 import { Star, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { MoodSearch } from "@/components/MoodSearch";
+import { MoodSearch } from "@/components/mood/MoodSearch";
 import { MoodSelector, CustomMood } from "@/components/mood/MoodSelector";
 import { MoodNote } from "@/components/mood/MoodNote";
 
