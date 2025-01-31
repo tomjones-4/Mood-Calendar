@@ -22,6 +22,18 @@ export function WeatherInsights({ moodData }: WeatherInsightsProps) {
           };
         }
 
+        const moodValue =
+          {
+            "😊": 5,
+            "😢": 1,
+            "😐": 3,
+            "😡": 1,
+            "🤩": 5,
+            "😴": 2,
+            "😰": 2,
+            "🥰": 5,
+          }[day.mood] || 3;
+
         weatherMoods[day.weather.conditions].count++;
         weatherMoods[day.weather.conditions].totalMoodValue += moodValue;
       }
