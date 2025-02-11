@@ -1,5 +1,6 @@
 import { MoodTrends } from "@/components/mood/MoodTrends";
 import { MoodAggregates } from "@/components/mood/MoodAggregates";
+import { WeatherInsights } from "@/components/WeatherInsights";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
 import { Star } from "lucide-react";
@@ -32,6 +33,7 @@ const Statistics = () => {
           </Card>
 
           <MoodAggregates moodData={moodData} />
+          <WeatherInsights moodData={moodData} />
         </div>
 
         <div className="space-y-8">

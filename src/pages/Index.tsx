@@ -16,6 +16,15 @@ export interface DayMood {
   mood: string;
   note?: string;
   favorite?: boolean;
+  weather?: {
+    description: string;
+    temperature: number;
+    conditions: string;
+  };
+  location?: {
+    city: string;
+    country: string;
+  };
 }
 
 const Index = () => {
