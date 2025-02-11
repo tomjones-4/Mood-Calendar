@@ -6,6 +6,7 @@ import { MoodCalendar } from "@/components/mood/MoodCalendar";
 import { format } from "date-fns";
 import { Star, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { DailyAffirmation } from "@/components/DailyAffirmation";
 import { MoodSearch } from "@/components/mood/MoodSearch";
 import { MoodSelector, CustomMood } from "@/components/mood/MoodSelector";
 import { MoodNote } from "@/components/mood/MoodNote";
@@ -153,6 +154,7 @@ const Index = () => {
 
       <div className="grid gap-8 md:grid-cols-[1fr,400px]">
         <div className="space-y-8 order-2 md:order-1">
+          <DailyAffirmation />
           <Card className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Your Mood Calendar</h2>
             <MoodCalendar
