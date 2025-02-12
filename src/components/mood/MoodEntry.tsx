@@ -11,7 +11,7 @@ import { DayMood } from "@/pages/Index";
 interface MoodEntryProps {
   selectedDate: Date;
   moodData: DayMood[];
-  setMoodData: (data: DayMood[]) => void;
+  setMoodData: (data: DayMood[] | ((prev: DayMood[]) => DayMood[])) => void;
   customMoods: CustomMood[];
   setCustomMoods: (moods: CustomMood[]) => void;
 }
@@ -39,7 +39,7 @@ export function MoodEntry({
       mood: selectedMood,
       note: note || undefined,
     };
-    setMoodData((prev) => {
+    setMoodData((prev: DayMood[]) => {
       const filtered = prev.filter(
         (mood) =>
           new Date(mood.date).toDateString() !== selectedDate.toDateString()
@@ -54,13 +54,12 @@ export function MoodEntry({
     setNote("");
   };
   const toggleFavorite = () => {
-    setMoodData((prev) => {
-      const newMoodData = prev.map((mood) =>
+    setMoodData((prev: DayMood[]) => {
+      return prev.map((mood) =>
         format(mood.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
           ? { ...mood, favorite: !mood.favorite }
           : mood
       );
-      return newMoodData;
     });
     toast({
       title: "Favorite updated",
